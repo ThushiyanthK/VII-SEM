@@ -133,15 +133,15 @@ if uploaded_file is not None:
             if "tree_model" not in st.session_state:
                 st.session_state.tree_model = load_tree_model()
             label, confidence = tree_predict_disease(image, st.session_state.tree_model)
-            response = f"✅ **Predicted disease:** *{label}*\n\n🎯 **Confidence:** *{confidence:.2f}*"
+            response = f"✅ Predicted disease: {label}\n\n🎯 Confidence: {confidence:.2f}"
     
             if label in disease_info:
                 response += (
-                    f"\n\n🧪 **Cause:** {disease_info[label]['cause']}"
-                    f"\n💊 **Remedy:** {disease_info[label]['remedy']}"
+                    f"\n\n🧪 Cause: {disease_info[label]['cause']}"
+                    f"\n💊 Remedy: {disease_info[label]['remedy']}"
                 )
             else:
-                response += "\n\n⚠️ No additional information available for this disease."
+                response += "\n\n⚠ No additional information available for this disease."
             st.success(response)
 
     with col2:
@@ -149,15 +149,16 @@ if uploaded_file is not None:
             if "leaf_model" not in st.session_state:
                 st.session_state.leaf_model = load_leaf_model()
             label, confidence = leaf_predict_disease(image, st.session_state.leaf_model)
-            response = f"✅ **Predicted disease:** *{label}*\n\n🎯 **Confidence:** *{confidence:.2f}*"
+            print(label)
+            response = f"✅ Predicted disease: {label}\n\n🎯 Confidence: {confidence:.2f}"
     
             if label in leaf_disease_info:
                 response += (
-                    f"\n\n🧪 **Cause:** {leaf_disease_info[label]['cause']}"
-                    f"\n💊 **Remedy:** {leaf_disease_info[label]['remedy']}"
+                    f"\n\n🧪 Cause: {leaf_disease_info[label]['cause']}"
+                    f"\n💊 Remedy: {leaf_disease_info[label]['remedy']}"
                 )
             else:
-                response += "\n\n⚠️ No additional information available for this disease."
+                response += "\n\n⚠ No additional information available for this disease."
             st.success(response)
 
 else:
@@ -203,9 +204,9 @@ if user_input := st.chat_input("Ask about coconut diseases or remedies..."):
 
     if matched_disease:
         response = (
-            f"🦠 *{matched_disease}*\n\n"
-            f"🧪 *Cause:* {disease_info[matched_disease]['cause']}\n"
-            f"💊 *Remedy:* {disease_info[matched_disease]['remedy']}"
+            f"🦠 {matched_disease}\n\n"
+            f"🧪 Cause: {disease_info[matched_disease]['cause']}\n"
+            f"💊 Remedy: {disease_info[matched_disease]['remedy']}"
         )
     else:
         response = ask_gemini(user_input)
