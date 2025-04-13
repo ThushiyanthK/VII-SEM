@@ -134,6 +134,9 @@ if uploaded_file is not None:
                 st.session_state.tree_model = load_tree_model()
             label, confidence = tree_predict_disease(image, st.session_state.tree_model)
             response = f"✅ Predicted disease: {label}\n\n🎯 Confidence: {confidence:.2f}"
+            st.session_state.last_predicted_disease = label
+            st.session_state.last_disease_type = "tree"
+
     
             if label in disease_info:
                 response += (
@@ -150,6 +153,8 @@ if uploaded_file is not None:
                 st.session_state.leaf_model = load_leaf_model()
             label, confidence = leaf_predict_disease(image, st.session_state.leaf_model)
             print(label)
+            st.session_state.last_predicted_disease = label
+            st.session_state.last_disease_type = "leaf"
             response = f"✅ Predicted disease: {label}\n\n🎯 Confidence: {confidence:.2f}"
     
             if label in leaf_disease_info:
@@ -200,17 +205,23 @@ def ask_gemini(user_input):
 if user_input := st.chat_input("Ask about coconut diseases or remedies..."):
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    matched_disease = next((d for d in disease_info if d.lower() in user_input.lower()), None)
+    # If user refers to previous disease
+    if "this disease" in user_input.lower() and "last_disease" in st.session_state:
+        disease_name = st.session_state.last_disease
+        disease_type = st.session_state.get("last_disease_type", "tree/leaf")
 
-    if matched_disease:
-        response = (
-            f"🦠 {matched_disease}\n\n"
-            f"🧪 Cause: {disease_info[matched_disease]['cause']}\n"
-            f"💊 Remedy: {disease_info[matched_disease]['remedy']}"
+        prompt = (
+            f"The user previously analyzed a coconut {disease_type} image and it was predicted "
+            f"to have the disease: '{disease_name}'.\n\n"
+            f"The user now asked: \"{user_input}\"\n\n"
+            f"Please provide a detailed explanation of this disease, including causes, symptoms, "
+            f"remedies, and any preventive measures. If the user's question is in Tamil or implies Tamil, respond in Tamil."
         )
+        response = ask_gemini(prompt)
     else:
         response = ask_gemini(user_input)
 
     with st.chat_message("assistant"):
         st.markdown(response)
+
     st.session_state.messages.append({"role": "assistant", "content": response})
