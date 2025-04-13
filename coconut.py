@@ -117,7 +117,7 @@ def leaf_predict_disease(image, model):
     if predicted_class >= len(disease_info):
         return "Unknown Disease", confidence
 
-    return list(disease_info.keys())[predicted_class], confidence
+    return list(leaf_disease_info.keys())[predicted_class], confidence
 
 # ------------------ IMAGE UPLOAD SECTION ------------------
 uploaded_file = st.file_uploader("📤 Upload Image", type=["jpg", "jpeg", "png"])
