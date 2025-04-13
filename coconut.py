@@ -91,8 +91,22 @@ leaf_disease_info = {
 }
 
 # ------------------ PREDICTION FUNCTION ------------------
-def predict_disease(image, model):
+def tree_predict_disease(image, model):
     img = image.resize((299, 299))
+    img_array = img_to_array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
+
+    prediction = model.predict(img_array)
+    predicted_class = np.argmax(prediction, axis=1)[0]
+    confidence = np.max(prediction)
+
+    if predicted_class >= len(disease_info):
+        return "Unknown Disease", confidence
+
+    return list(disease_info.keys())[predicted_class], confidence
+
+def leaf_predict_disease(image, model):
+    img = image.resize((224, 224))
     img_array = img_to_array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
@@ -118,7 +132,7 @@ if uploaded_file is not None:
         if st.button("🌴 Analyze Tree Image"):
             if "tree_model" not in st.session_state:
                 st.session_state.tree_model = load_tree_model()
-            label, confidence = predict_disease(image, st.session_state.tree_model)
+            label, confidence = tree_predict_disease(image, st.session_state.tree_model)
             response = f"✅ **Predicted disease:** *{label}*\n\n🎯 **Confidence:** *{confidence:.2f}*"
     
             if label in disease_info:
@@ -134,7 +148,7 @@ if uploaded_file is not None:
         if st.button("🍃 Analyze Leaf Image"):
             if "leaf_model" not in st.session_state:
                 st.session_state.leaf_model = load_leaf_model()
-            label, confidence = predict_disease(image, st.session_state.leaf_model)
+            label, confidence = leaf_predict_disease(image, st.session_state.leaf_model)
             response = f"✅ **Predicted disease:** *{label}*\n\n🎯 **Confidence:** *{confidence:.2f}*"
     
             if label in leaf_disease_info:
