@@ -184,11 +184,7 @@ def ask_gemini(user_input):
     model = genai.GenerativeModel(
         "gemini-1.5-pro",
         system_instruction=(
-            "You are a helpful assistant that only answers questions related to coconut diseases, "
-            "their symptoms, causes, remedies, and coconut farming. If asked anything else, reply with: "
-            "'I'm sorry, I can only help with coconut-related queries.' "
-            "You must understand Tamil queries and respond in Tamil language. If the user expects a reply in Tamil, "
-            "give the reply in Tamil. Also, if the user input is in Tamil, understand it and reply in Tamil."
+            "You are a helpful assistant that only answers questions related to coconut diseases,their symptoms, causes, remedies, and coconut farming. If asked anything else, reply with:'I'm sorry, I can only help with coconut-related queries.'You must understand Tamil queries and respond in Tamil language only if the user expects a reply in tamil. If the user expects a reply in Tamil, give the reply in Tamil. Also, if the user input is in Tamil, understand it and reply in Tamil."
         )
     )
 
@@ -206,16 +202,16 @@ if user_input := st.chat_input("Ask about coconut diseases or remedies..."):
     st.session_state.messages.append({"role": "user", "content": user_input})
 
     # If user refers to previous disease
-    if "this disease" in user_input.lower() and "last_disease" in st.session_state:
-        disease_name = st.session_state.last_disease
+    if "this disease" in user_input.lower() or "above disease" in user_input.lower() or "predicted disease" in user_input.lower() and "last_disease" in st.session_state:
+        disease_name = st.session_state.last_predicted_disease
         disease_type = st.session_state.get("last_disease_type", "tree/leaf")
-
+        print(disease_name)
         prompt = (
             f"The user previously analyzed a coconut {disease_type} image and it was predicted "
             f"to have the disease: '{disease_name}'.\n\n"
             f"The user now asked: \"{user_input}\"\n\n"
             f"Please provide a detailed explanation of this disease, including causes, symptoms, "
-            f"remedies, and any preventive measures. If the user's question is in Tamil or implies Tamil, respond in Tamil."
+            f"remedies, and any preventive measures. If the user's question is in Tamil or implies Tamil, respond in Tamil. Or else reply in english"
         )
         response = ask_gemini(prompt)
     else:
