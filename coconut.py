@@ -20,7 +20,7 @@ TREE_MODEL_PATH = "tree_model.keras"
 LEAF_MODEL_PATH = "leaf_model.keras"
 
 TREE_MODEL_ID = "1Qse74IbkhvuMCVytroGzvpT-9E6DuEU9"  # Replace with your tree model ID
-LEAF_MODEL_ID = "1qZljo_V7fVhsR2aNIZBedtbebODtN3s6"  # Replace with your leaf model ID
+LEAF_MODEL_ID = "1gUT8FKVCisPaFRl8efdavLmPzNx5fXLU"  # Replace with your leaf model ID
 
 TREE_MODEL_URL = f"https://drive.google.com/uc?id={TREE_MODEL_ID}"
 LEAF_MODEL_URL = f"https://drive.google.com/uc?id={LEAF_MODEL_ID}"
