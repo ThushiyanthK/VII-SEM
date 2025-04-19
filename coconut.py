@@ -106,7 +106,7 @@ def tree_predict_disease(image, model):
     return list(disease_info.keys())[predicted_class], confidence
 
 def leaf_predict_disease(image, model):
-    img = image.resize((224, 224))
+    img = image.resize((299, 299))
     img_array = img_to_array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
