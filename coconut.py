@@ -202,7 +202,7 @@ if user_input := st.chat_input("Ask about coconut diseases or remedies..."):
     st.session_state.messages.append({"role": "user", "content": user_input})
 
     # If user refers to previous disease
-    if "this disease" in user_input.lower() or "above disease" in user_input.lower() or "predicted disease" in user_input.lower() and "last_disease" in st.session_state:
+    if "this disease" in user_input.lower() or "above disease" in user_input.lower() or "predicted disease" in user_input.lower() or "மேற்கண்ட நோய்" in user_input() and "last_disease" in st.session_state:
         disease_name = st.session_state.last_predicted_disease
         disease_type = st.session_state.get("last_disease_type", "tree/leaf")
         print(disease_name)
